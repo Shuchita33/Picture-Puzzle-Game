@@ -1,70 +1,86 @@
 var rows = 3;
 var columns = 3;
 
-var currTile; //this variable would be reference to the tile clicked to drag 
-var otherTile;// the tile to swap with 
+var currTile;
+var otherTile;
 
-var turns = 0; // declaring a variable named turns so it will keep track of the number of turns and we start with zero
+var turns = 0; 
+
+//The actual correct order of the pieces
+let order=['9', '8', '7', '6', '5', '4', '3', '2', '1'];
+
 
 window.onload = function() {
-    //initialize the 3x3 board
+
+    // retrieves which level player has clicked to play and loads it 
+
+    let level=localStorage.getItem('level');
+    console.log(level);
+    let l=1;
+    if(level=="Level 2"){
+            l=2;
+    }
+    if(level=="Level 3"){
+        l=3;
+    }
+    let t=1;
+    
     for (let r = 0; r < rows; r++) {
         for (let c = 0; c < columns; c++) {
            
             let tile = document.createElement("img");
-            tile.src = "Assets/blank.jpg";
-            
-            //DRAG FUNCTIONALITY
-            tile.addEventListener("dragstart", dragStart); //click on image to drag
-            tile.addEventListener("dragover", dragOver);   //drag an image
-            tile.addEventListener("dragenter", dragEnter); //dragging an image into another one
-            tile.addEventListener("dragleave", dragLeave); //dragging an image away from another one
-            tile.addEventListener("drop", dragDrop);       //drop an image onto another one
-            tile.addEventListener("dragend", dragEnd);      //after you completed dragDrop
+            tile.id="bkatile"+t;
+            tile.src = "Assets1/blank.jpg";
+            t++;
+           
+            tile.addEventListener("dragstart", dragStart); 
+            tile.addEventListener("dragover", dragOver);   
+            tile.addEventListener("dragenter", dragEnter); 
+            tile.addEventListener("dragleave", dragLeave); 
+            tile.addEventListener("drop", dragDrop);       
+            tile.addEventListener("dragend", dragEnd);     
 
-            document.getElementById("board").append(tile);// the images are append
+            document.getElementById("board").append(tile);
         }
     }
-
-    //pieces
-    // The names of all images used are stored in an array
+    
     let pieces = [];
     for (let i=1; i <= rows*columns; i++) {
-        pieces.push(i.toString()); //put "1" to "9" into the array which corresponds to (puzzle images names)
+        pieces.push(i.toString()); 
     }
     
+    // to shuffle the pieces
     pieces.reverse();
     for (let i =0; i < pieces.length; i++) {
         let j = Math.floor(Math.random() * pieces.length);
 
         //swap
         let tmp = pieces[i];
-        pieces[i] = pieces[j]; //image at ith index swapped with image at jth index
+        pieces[i] = pieces[j]; 
         pieces[j] = tmp;
     }
     
     for (let i = 0; i < pieces.length; i++) {
         let tile = document.createElement("img");
        
-        tile.src = "Assets/" + pieces[i] + ".jpg";
-     
-        //DRAG FUNCTIONALITY
+        tile.src = "Assets"+l+"/" + pieces[i] + ".jpg";
 
-        tile.addEventListener("dragstart", dragStart); //when an image is clicked to drag
-        tile.addEventListener("dragover", dragOver);   //while the image is being clicked and moves with tha mouse is drag over
-        tile.addEventListener("dragenter", dragEnter); //to drag an image into another one 
-        tile.addEventListener("dragleave", dragLeave); //drag an image away from another one
-        tile.addEventListener("drop", dragDrop);       //drop an image onto another one 
-        tile.addEventListener("dragend", dragEnd);      //after you completed dragDrop when drag end occurs the two images are swapped
+        tile.addEventListener("dragstart", dragStart); 
+        tile.addEventListener("dragover", dragOver);  
+        tile.addEventListener("dragenter", dragEnter); 
+        tile.addEventListener("dragleave", dragLeave); 
+        tile.addEventListener("drop", dragDrop);       
+        tile.addEventListener("dragend", dragEnd);      
 
-// this occurs for every pair of images to be swapped.
-        document.getElementById("pieces").append(tile); 
+        document.getElementById("pieces").append(tile);     
+       
     }
+    let butt=document.getElementById("but");
+    butt.addEventListener("func",butfunc);
 }
 
-//DRAG TILES
 function dragStart() {
-    currTile = this; //this refers to image that was clicked on for dragging
+    currTile = this; 
 }
 
 function dragOver(e) {
@@ -80,7 +96,8 @@ function dragLeave() {
 }
 
 function dragDrop() {
-    otherTile = this; //this refers to image that is being dropped on
+    otherTile = this; 
+    
 }
 
 function dragEnd() {
@@ -91,7 +108,68 @@ function dragEnd() {
     let otherImg = otherTile.src;
     currTile.src = otherImg;
     otherTile.src = currImg;
-
+    
     turns += 1;
     document.getElementById("turns").innerText = turns;
+}
+
+// To close popup after submit
+function func_close(check){ 
+    if(check==1){ 
+        let pp=document.getElementById("popup");
+        pp.classList.remove('popup_opened');
+    }
+    else {let pp=document.getElementById("popup2");
+        pp.classList.remove('popup_opened2');}
+    
+}
+
+// To open popup after submit
+function func_open(check){ 
+    if(check==1){ let pp=document.getElementById("popup");
+    pp.classList.add('popup_opened');
+    }
+    else { let pp=document.getElementById("popup2");
+           pp.classList.add('popup_opened2');
+    }
+}
+
+function butfunc(){
+    
+    let get_order=[];
+    var i=1;
+    for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < columns; c++) {
+             let bt=document.getElementById("bkatile"+i);
+            
+            let str=(bt.src).toString();
+            get_order.push(str.charAt(str.length-5));
+             i++;
+        }
+    }
+   //console.log(get_order);
+   const fl= arraysAreIdentical(order, get_order);
+   
+    if(fl){
+            func_open(1);
+            
+    }
+    else {
+        func_open(2);
+    }
+    
+    //Function to check if all pieces are arranged correctly or not 
+    
+   function arraysAreIdentical(order, get_order){
+    
+        for (var i = 0;i < 9; i++){
+            if (order[i] !== get_order[i]){
+                console.log("not same");
+                return false;
+            }          
+        }
+        console.log('same');
+        return true; 
+    }
+    
 }
