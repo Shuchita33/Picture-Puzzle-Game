@@ -17,6 +17,7 @@ body {
     justify-content: center;
     padding: 1vw;
     height: 80vh;
+    width: 90%;
     border-radius: 0.5vw;
     background-color:  #a491b5b0;
     
@@ -27,7 +28,8 @@ body {
     margin-bottom:5vh;
     display: flex;
     flex-wrap: wrap;
-    
+    justify-content: center;   
+    align-items: center;     
 }
 
 #board img {
@@ -124,4 +126,32 @@ input[type="submit"]:hover{
     background: #a22626;
     
 }
-
+@media screen and (max-width:990px){
+    #pieces {
+        width: 555px;
+        height: 61px;     
+    }
+    #pieces img {
+        width: 60px;
+        height: 60px;    
+    }
+}
+@media screen and (max-width:650px){
+    #pieces {
+        width: 246px;
+        height: 130px;
+        overflow:auto;   
+    }
+    #pieces img {
+        width: 60px;
+        height: 60px;  
+    }
+    #board {
+        width: 300px;
+        height: 200px;        
+    }
+    #board img {
+        width: 81px;
+        height: 81px;
+    }
+}
