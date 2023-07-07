@@ -85,3 +85,9 @@ body {
     -webkit-text-fill-color: transparent;
     white-space: nowrap;
 }
+@media screen and (max-width:650px){
+    #contains_buttons{
+        flex-direction: column;
+        margin-top: 20vw;
+}
+}
